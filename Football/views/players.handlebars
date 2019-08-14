@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Free Agents</title>
+	<style>
+	h1 
+	{
+		background-color: #770000;
+	}
+</style>
+</head>
+<body>          			
+		
+	<h1>Free Agents</h1>
+
+	
+
+	<div style="padding-left:16px">
+		
+		<p style="color:white;">Filter by postion: 
+		</p>
+		<td><a href="/players" class="btn btn-primary pull-left" role="button">All</a></td>	
+		<td><a href="/players/getQB" class="btn btn-primary pull-left" role="button">QB</a></td>
+		<td><a href="/players/getRB" class="btn btn-primary pull-left" role="button">RB</a></td>
+		<td><a href="/players/getWR" class="btn btn-primary pull-left" role="button">WR</a></td>
+		<td><a href="/players/getTE" class="btn btn-primary pull-left" role="button">TE</a></td>
+		<td><a href="/players/getK" class="btn btn-primary pull-left" role="button">K</a></td>
+		<td><a href="/players/getDEF" class="btn btn-primary pull-left" role="button">DEF</a></td>
+
+
+    <table class="fixed_header">
+    <thead>	    
+    	<tr>
+	      <th>Name</th>
+	      <th>POS</th>
+	      <th>PTS</th>
+	      <th>Add Player</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    {{# each players}}
+	    <tr>
+		 	<td>{{this.name}}</td>
+		    <td>{{this.position}}</td>
+		    <td>{{this.seasonProjectedPts}}</td>
+		    <td><a href="/players/select-player/{{this.id}}" class="btn btn-success" role="button"><i class="fas fa-plus"></i></a></td>
+		</tr>
+	    {{/each}}
+	</tbody>
+    </table>
+	</body>
+
+</html>

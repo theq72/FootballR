@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <title>FOOTBALLr</title>
+   <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js">
+
+</script>
+  <link rel="stylesheet" href="/css/bootstrap.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+ 
+  <style>
+
+  h1 {
+            color: #E8E3DD;
+            font-family: Playfair Display SC;
+            font-size: 43px;
+            font-weight: 700;
+            line-height: 55px;
+            padding-left:16px;
+            width: 900px;
+            height: 60px;
+
+        }
+
+        .topnav {         /* Add a cream background color to the top navigation */
+          overflow: hidden;
+          background-color: #E8E3DD;
+
+
+        }
+        .topnav a {         /* Style the links inside the navigation bar */
+            float: left;
+            color: #515151;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 15px;
+
+        }
+        .topnav a:hover {     /* Change the color of links on hover */
+            background-color: #8190A5;
+            color: #E8E3DD;
+        }
+        .topnav a.active {      /* Add a color to the active/current link */
+            background-color: #12574B;
+            color: #E8E3DD;
+        }
+
+        h2 {color: #ffffff;
+
+        }
+
+        .allaligncenter{
+          float: center;
+        }
+        .alignleft {
+
+            float: left;
+        }
+
+        .aligncenter {
+          text-align: center;
+        }
+
+        .alignright {
+
+            float: right;
+        }
+
+        h3 {color: black;
+
+        }
+
+ .fixed_header{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 400px;
+}
+
+.fixed_header thead tr {
+  background-color: black;
+          color: #ffffff;
+   display: block;
+}
+
+.fixed_header thead {
+
+  background: black;
+  color:#fff;
+}
+
+.fixed_header th, .fixed_header td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
+}
+
+      
+        table {       /*CSS Code: Place this code in the document's head (between the 'head' tags)*/
+            font-family: Lato;
+            font-size: 15px;
+            border-collapse: collapse;
+            width: 100%;
+            color: #000000;
+            text-align: left;
+        }
+        th, td {
+          padding: 8px;
+        }
+        tr:nth-child(even) {
+          background-color: #515151;
+          color: #ffffff;
+        }
+        tr:nth-child(odd) {
+            background-color: #E8E3DD;
+
+        }
+
+        
+        footer {background-color: #515151;
+            height: 50px;
+        }
+        body {background-color: #12574B;
+          margin: 0;
+          font-family: Lato, Playfair Display SC, sans-serif;
+
+        }
+        
+      </style>
+</head>
+<body>
+ 
+  <div class="container" >
+      <div class="header clearfix">
+        <div class="topnav " >
+        <nav>
+          <h3 class="aligncenter">FOOTBALLr</h3>
+          <ul id="header" class="nav nav-pills pull-right " >
+            {{#if user}}
+              <li role="presentation"><a href="/">Home</a></li>
+              <li role="presentation"><a href="/myTeam">My Team</a></li>
+
+              <li role="presentation"><a href="/players">Free Agents</a></li>
+              <li role="presentation"><a href="/matchup">Matchups</a></li>
+              <li role="presentation"><a href="/standings">Standings</a></li>
+              <li role="presentation"><a href="/draft">Draft</a></li>              
+              <li role="presentation"><a href="/users/logout">Logout</a></li>
+            {{else}}
+              <li role="presentation" ><a href="/users/login">Login</a></li>
+              <li role="presentation"><a href="/users/register">Register</a></li>
+            {{/if}}
+          </ul>
+        </nav>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-lg-12">
+          {{#if success_msg}}
+            <div class="alert alert-success">{{success_msg}}</div>
+          {{/if}}
+
+          {{#if error_msg}}
+            <div class="alert alert-danger">{{error_msg}}</div>
+          {{/if}}
+
+          {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+          {{/if}}
+          
+          {{{body}}}
+        </div>
+
+        
+      </div>
+
+
+      <footer class="footer">
+        <p>&copy; Aviato.</p>
+      </footer>
+
+    </div> <!-- /container -->
+</body>
+
+</html>

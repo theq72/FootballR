@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Players</title>
+      <style>
+        h1 {background-color: #9D2D03;
+        }
+        
+    </style>
+  </head>
+  <body>
+  <h1>Matchups</h1>
+  <div style="padding-left:16px">
+    <h2 class="alignleft">{{username}}'s Lineup</h2>
+  </div>
+
+  <table>
+    <tr>
+      <th>Position</th>
+      <th>Player</th>
+      <th>Team</th>
+      <th>Projected Points</th>
+      <th>Points</th>
+    </tr>
+    {{# each actQB}}
+    <tr>
+      <th>QB</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+    {{/each}}
+    </tr>
+    {{# each actWR}}
+    <tr>
+      <th>WR</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each actRB}}
+    <tr>
+      <th>RB</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each actTE}}
+      <tr>
+      <th>TE</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each actK}}
+    <tr>
+      <th>K</th>      
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each actDEF}}
+    <tr>
+      <th>DEF</th>      
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+    {{/each}}
+    </tr>
+    <tr>
+      <th>Total Points</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>{{uPoints}}</th>           
+    </table>
+
+  <div style="padding-left:16px">
+    <h2 class="alignleft">{{opp}} Lineup</h2>
+  </div>
+
+  <table>
+    <tr>
+      <th>Position</th>
+      <th>Player</th>
+      <th>Team</th>
+      <th>Projected Points</th>
+      <th>Points</th>
+    </tr>
+    <tr>
+      <th>QB</th>
+      {{# each oppQB}}
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each oppWR}}
+    <tr>
+      <th>WR</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    {{# each oppRB}}
+    <tr>
+      <th>RB</th>
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    <tr>
+      <th>TE</th>
+      {{# each oppTE}}
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    <tr>
+      <th>K</th>
+      {{# each oppK}}
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+      {{/each}}
+    </tr>
+    <tr>
+      <th>DEF</th>
+    {{# each oppDEF}}
+      <th>{{this.name}}</th>
+      <th>{{this.teamAbbr}}</th>
+      <th>{{this.weekProjectedPts}}</th>
+      <th>{{this.weekPts}}</th>
+    {{/each}}
+    </tr>
+    <tr>
+      <th>Total Points</th>
+      <th></th>
+      <th></th>   
+      <th></th>                 
+      <th>{{oPoints}}</th>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Players</title>
+	<style>
+
+	h1 {background-color: #C48F08;
+	}
+
+</style>
+</head>
+<body>
+
+	<h1>Standings</h1>
+	<div style="padding-left:16px">
+
+		<table>
+			<tr>
+				<th>Name</th>
+                <th>W</th>
+                <th>L</th>
+                <th>T</th>
+                <th>Win Percentage</th>
+            </tr>
+            {{# each userList}}
+            <tr>
+            	<td> {{this.name}}</td>
+                <td> {{this.wins}}</td>
+                <td> {{this.losses}}</td>
+                <td> {{this.ties}}</td>
+		        <td> {{this.WinPerc}}</td>
+		        <td><a href="/viewTeam/{{this.id}}">View Team</a></li>
+		    </tr>
+		    {{/each}}
+		</table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!--
+File: draft.handlebars
+Client-side draft code
+-->
+<!DOCTYPE html>
+<html>
+
+	<body>	
+
+		<head>
+
+			<style>
+
+				h1 {
+
+					background-color: #9D2D03;
+
+  				}
+				
+				body {
+
+					background-color: #12574B;
+					margin: 0;
+					font-family: Lato, Playfair Display SC, sans-serif;
+					height: 100%;
+
+				}
+
+				ul.a{
+				display:inline-block;
+  float:left;
+				max-width: 300px;
+					max-height:400px;
+  margin:0;
+  overflow:auto;
+  padding:0;
+  text-indent:10px;
+				}
+
+				li.b{
+				display
+					padding: 8px;
+					border: 2px solid red;
+					border-radius: 5px;
+					max-width: 300px;
+					margin: 5px;
+					cursor: pointer;
+					box-shadow: 2px 2px 3px #666;
+					user-select: none;
+					background: #cccccc; /* Old browsers */
+					background: -moz-linear-gradient(top, #cccccc 0%, #ffffff 25%, #ffffff 75%, #cccccc 100%); /* FF3.6+ */
+					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cccccc), color-stop(25%,#ffffff), color-stop(75%,#ffffff), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+					background: -webkit-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+					background: -o-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* Opera 11.10+ */
+					background: -ms-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* IE10+ */
+					background: linear-gradient(to bottom, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* W3C */
+					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+				}
+				li.c{
+					padding: 8px;
+					border: 2px solid blue;
+					border-radius: 5px;
+					max-width: 300px;
+					margin: 5px;
+					box-shadow: 2px 2px 3px #666;
+					background: #cccccc; /* Old browsers */
+					background: -moz-linear-gradient(top, #cccccc 0%, #ffffff 25%, #ffffff 75%, #cccccc 100%); /* FF3.6+ */
+					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cccccc), color-stop(25%,#ffffff), color-stop(75%,#ffffff), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+					background: -webkit-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+					background: -o-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* Opera 11.10+ */
+					background: -ms-linear-gradient(top, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* IE10+ */
+					background: linear-gradient(to bottom, #cccccc 0%,#ffffff 25%,#ffffff 75%,#cccccc 100%); /* W3C */
+					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+				}
+
+			</style>
+
+			<h1 align="center">Welcome to FOOTBALLr Draft Board</h1>
+
+		</head>
+
+		<!--<button type="button" id="start-draft" name="start">Start Draft</button>-->
+
+
+		<div id="secondsLeft"></div>
+		<h2>Available Players:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Your Team:</h2>
+
+		<div>
+		<button onclick="filterALL()">All</button>
+		<button onclick="filterQB()">QB</button>
+		<button onclick="filterRB()">RB</button>
+		<button onclick="filterWR()">WR</button>
+		<button onclick="filterTE()">TE</button>
+		<button onclick="filterK()">K</button>
+		<button onclick="filterDEF()">DEF</button>
+		</div>
+
+
+		<div id="freeAgents"></div>
+			<ul class="alignright"  id="roster"></ul>
+
+		<!-- Gets socket.io library installed on client side-->
+		<script src="/socket.io/socket.io.js"></script>
+
+		<script>
+
+			/* Variables to reference/append html elements. */
+			var freeAgents = document.getElementById('freeAgents');
+			var roster = document.getElementById('roster');
+			var seconds = document.getElementById('secondsLeft');	// Creates second element to display countdown.
+
+			var expandingList = document.createElement('ul', { is : 'expanding-list'});
+			expandingList.classList.add("a");
+
+			// Creates an unordered, expanding list to attach list elements to.
+			freeAgents.appendChild(expandingList); 			// Attach ul to freeAgents div
+
+			/* Other Variables */
+			var pList = [];									// Populate with initial Mongo query
+			var uID;										// To be the logged-in user's ID.
+			var uTeam = [];
+			var unfulfilled = ['QB', 'RB', 'RB', 'WR', 'WR', 'WR', 'TE', 'K', 'DEF'];  // unfulfilled keeps track of position requirements for the user.
+			var flex;  										// TBD: Not sure if we'll have a "Flex" position.
+			var uListMax = 15;  							// Max number of players a user can draft.
+			var timeLeft = 5;								// Creates var for timer max which is 5 sec.
+			var timerID;
+
+			// Connects users and makes a connection between client and server.
+			var socket = io.connect('http://localhost:3000');
+
+			// When server timer runs out, autodraft and pass turn.
+			socket.on('autodraft', function()
+			{
+
+				autoDraft(firstAvailable());
+
+				socket.emit('passturn');
+				
+			});
+
+			// When the server finds it is your turn.
+			socket.on('yourturn', function()
+			{
+
+				// Alert the client of their turn.
+				alert('It is your turn.');
+
+			})
+
+			/* Initial JavaScript Program Execution */	
+				
+			/* Start by getting the client user's id */
+			var idRequest = new XMLHttpRequest();
+
+			idRequest.onreadystatechange = function() 
+			{
+
+				if (idRequest.readyState === XMLHttpRequest.DONE) 
+				{
+
+					if (idRequest.status === 200) 
+					{
+
+						uID = idRequest.responseText;
+						console.log("User connected : " + uID);		// Displays user connection.
+						playerRequest();							// Follow up with the next request in the function chain.
+
+					}
+					else 
+						alert('There was a problem getting your user ID.');
+
+				}
+
+			};
+
+			idRequest.open('GET', '/draft/get-user');
+			idRequest.send();
+
+			/* Function Definitions */
+
+			/*
+				Upon clicking on Start Game, use a request to get a player list from our Mongo database.
+				Try to populate pList array from server response.
+			*/
+			function playerRequest()
+			{
+
+				var ourRequest = new XMLHttpRequest();
+
+				ourRequest.onreadystatechange = function() 
+				{
+
+				    if (ourRequest.readyState === XMLHttpRequest.DONE) 
+				    {
+
+						if (ourRequest.status === 200) 
+						{
+
+							pList = JSON.parse(ourRequest.responseText);
+
+							// Remove players with positions DL, LB, and DB
+							unwantedPositions();
+
+							// Initializes draft: creates the list with undrafted players and adds any previously drafted players to user team.
+							initDraft();							
+
+							// For each player in user team, enforce min/max position rules if applicable.
+							initLimitCheck();	
+
+							//timerID = setInterval(countdown, 1000);	// Uses setInterval to create timer on 1 second basis.		
+
+						}
+						else
+						    alert('There was a problem fetching player data.');
+
+					}
+
+				};
+
+				ourRequest.open('GET', '/draft/get-players');
+				ourRequest.send();
+
+			}
+
+
+			/* Request to the server to associate the drafted player with the logged-in user. */
+			function draftRequest(pID) 
+			{
+
+				var dRequest = new XMLHttpRequest();
+				var url = '/draft/select-player/' + pID;
+				dRequest.open('GET', url);
+				dRequest.send();
+
+			}
+
+			function appendToRoster(ind) {
+				var newEl = document.createElement('li');		
+				newEl.classList.add("c");
+					// Creates new li items	
+				newEl.textContent = pList[ind].position + ' ' 
+					+ pList[ind].name + ' ' + pList[ind].seasonProjectedPts;
+				roster.appendChild(newEl);							// Attach li to roster
+			}
+
+			/*
+				Given an index for pList, create a new list element containing the player details
+				and append it to the expanding list.
+			*/
+			function appendPlayer(ind) {
+				var newEl = document.createElement('li');	
+				newEl.classList.add("b");
+
+					// Creates new li items	
+				newEl.id = pList[ind].id;						// Make li id match the player id
+				newEl.textContent = pList[ind].position + ' ' 
+					+ pList[ind].name + ' ' + pList[ind].seasonProjectedPts;
+				newEl.addEventListener('click', chooseP);		// Call function upon click.
+				expandingList.appendChild(newEl);				// Attach li to expandingList
+			}
+
+			/* 
+				Loop to create corresponding clickable rows for each player in player list.
+				Also will add user's players to the user team array in case of loading an already-in-progress draft.
+				Formerly called createList.
+			*/
+			function initDraft() 
+			{
+
+				for (var i = 0; i < pList.length; i++) 
+				{
+
+					if (pList[i].isOwned === 'N/A')
+					{
+
+						appendPlayer(i);	// Appends the player details to the expanding list.
+
+					}
+
+					if (pList[i].isOwned == uID) 
+					{
+
+						appendToRoster(i);
+						
+						uTeam.push(pList[i]);							// Initialize user team in case of in-progress draft.
+
+						if (unfulfilled.includes(pList[i].position)) 
+						{	
+
+							// Check fulfilled minimum limits.
+							var ind = unfulfilled.indexOf(pList[i].position);
+							unfulfilled.splice(ind, 1);  				// Remove an instance of the position from unfulfilled.
+
+						}
+
+					}
+
+				}
+
+			}
+
+			/*function countdown() 
+			{
+
+				if (uTeam.length < uListMax) 
+				{	
+
+					if (timeLeft == -1) 
+					{
+
+						clearInterval(timerID);
+						//autoDraft(firstAvailable());  			// If time runs out, autodraft first available draftable player.
+						timeLeft = 15;  								// Resets time for timer.
+						timerID = setInterval(countdown, 1000);;  		// Resets timer.
+
+					} 
+					else 
+					{
+
+						seconds.innerHTML = timeLeft + ' seconds remaining';
+						timeLeft--;
+
+					}
+
+				}
+
+			}*/
+
+			/* Checks whether a given position is currently eligible for drafting. Returns true/false. */
+			function draftableP(position) 
+			{
+
+				var spaceLeft = uListMax - uTeam.length; 				// Calculate team spaces left.
+
+				// If spaces left <= unfulfilled draft minimums.
+				if (spaceLeft <= unfulfilled.length) 
+				{  
+
+					// Return whether the position must still be drafted for minimum limits.
+					return (unfulfilled.includes(position));  
+
+				}
+
+				var count = getPositionCount(position);
+				return count < getMax(position);  						// Returns whether the user has not reached the maximum for the position for maximum limits.
+
+			}
+
+			/*
+				Finds and returns the index of the first available undrafted player with a valid postion.
+				To be used primarily to provide the parameter for the autoDraft function.
+			*/
+			function firstAvailable() 
+			{
+
+				for (var i = 0; i < pList.length; i++) 
+				{
+
+					// If the user can still draft the position...
+					if (draftableP(pList[i].position)) 
+					{	
+
+						// If the player has not yet been drafted...
+						if (pList[i].isOwned == 'N/A')
+						{
+
+							return i;  									// Return the index for player element in pList.
+
+						}
+
+					}
+
+				}
+
+			}
+
+			// TODO: Add a Mongo query that updates player with user id.
+			function autoDraft(index) 
+			{
+
+				draftRequest(pList[index].id);					// Record drafted player on the server.
+				
+				appendToRoster(index);
+				
+				uTeam.push(pList[index]);  						// Adds player to user's team.
+
+				if (unfulfilled.includes(pList[index].position)) 
+				{
+
+					var ind = unfulfilled.indexOf(pList[index].position);
+					unfulfilled.splice(ind, 1);  				// Remove an instance of the position from unfulfilled.
+
+				}
+
+				pList[index].isOwned = uID;  					// Associates the player with the user.
+				removeButtons(pList[index]);  					// Removes buttons for players the user can no longer draft.
+
+				socket.emit('passturn');						// Passes the turn to the next user.
+
+			}
+
+			/* Find a player from pList by its ID */
+			function getPlayer(pID) 
+			{
+				for (var i = 0; i < pList.length; i++) 
+				{
+
+					if (pList[i].id == pID) 
+					{
+						return i;
+					}
+
+				}
+
+			}
+				
+			/* 
+				Drafts a player from the free agent list to the user's team. 
+				Only to be called by HTML player row element.
+				TODO: Add a Mongo query that updates player with user id.
+			*/
+			function chooseP() 
+			{			
+
+				// Element is passed in function it calls, so we can use this.id to get the player's ID.
+				var playerID = this.id;	
+				var index = getPlayer(playerID);
+
+				if (uTeam.length < uListMax) 
+				{
+
+					draftRequest(playerID);								// Record drafted player on the server.
+					timeLeft=5; 										// Resets time for timer.
+					
+					appendToRoster(index);
+
+					uTeam.push(pList[index]);  							// Adds player to user's team.
+
+					if (unfulfilled.includes(pList[index].position)) 
+					{
+
+						var ind = unfulfilled.indexOf(pList[index].position);
+						unfulfilled.splice(ind, 1);						// Remove an instance of the position from unfulfilled.
+
+					}
+
+					pList[index].isOwned = uID;  						// Changes status of player in pList to drafted.
+					removeButtons(pList[index]);  						// Will remove buttons the user should no longer be able to click.
+
+				}
+
+				socket.emit('passturn');								// Once a player is selected, pass the turn.
+
+			}
+
+			/* Reports the maximum draft limit for a given position. */
+			function getMax(position) 
+			{
+
+				if (position == "RB" || position == "WR") 
+				{
+					return 6;
+				}
+
+				return 3;
+
+			}
+
+			/* 
+				Reports the minimum draft limit for a given position. This function is not currently used in the web page. For now, minimums are tracked by the unfulfilled array. Keeping this function here if we decide not to use the unfulfilled array.
+			*/
+			function getMin(position) 
+			{
+
+				if (position == "RB" || position == "WR") 
+				{
+					return 3;
+				}
+
+				return 1;
+
+			}
+
+			/* Returns the number of a given position currently drafted in the user's team. */
+			function getPositionCount(position) 
+			{
+
+				var count = 0;
+
+				for (var i = 0; i < uTeam.length; i++) 
+				{
+
+					if (uTeam[i].position == position) 
+					{
+						count++;
+					}
+
+				}
+
+				return count;
+
+			}
+
+			/*
+				Calls draftableP, which checks for min/max limits. If a max limit is reached, remove buttons for any undrafted player remaining with that position. If the user has only enough team spaces left to fulfill minimums, remove buttons for players that do not have those positions.
+			*/
+			function enforceLimits(aPlayer) 
+			{
+
+				// If the position can no longer be drafted...
+				if (!draftableP(aPlayer.position)) 
+				{	
+
+					for (var i = 0; i < pList.length; i++) 
+					{
+
+						// Find any undrafted players that no longer have the draftable position.
+						if ((pList[i].position == aPlayer.position) && (pList[i].isOwned == 'N/A')) 
+						{
+							var elem = document.getElementById(pList[i].id);	// References the corresponding button.
+							elem.parentNode.removeChild(elem);					// Removes the button.
+						}
+
+					}
+
+				}
+
+			}
+
+			/*
+				Finds and removes any buttons corresponding to players the user can no longer draft.
+				The player may have already been drafted. Or the user has reached the draft limit for a given postion.
+			*/
+			function removeButtons(player) 
+			{
+
+				var elem = document.getElementById(player.id);  		// Find most recently drafted player.
+				elem.parentNode.removeChild(elem);  					// Removes the corresponding button.
+				enforceLimits(player);
+
+			}
+
+			/*
+				Similar to removeButtons, except this function is performed only once upon initial page load. It checks and enforces any applicable min/max limits for the case when the page is loaded during an in-progress draft.
+			*/
+			function initLimitCheck() 
+			{
+
+				for (var i = 0; i < uTeam.length; i++) 
+				{
+					enforceLimits(uTeam[i]);
+				}
+
+			}
+
+			/*
+				Iterates through pList and removes any players with positions of DL, LB, or DB
+			*/
+			function unwantedPositions()
+			{
+				for (var i = 0; i < pList.length; i++)
+				{
+					if (pList[i].position === 'DL' || pList[i].position === 'LB' || pList[i].position === 'DB')
+					{
+						pList.splice(i, 1);
+					}
+				}
+			}
+
+			/*
+				Rebuilds the expanding list to contain only the players of the position the user specifies.
+				Must delete and re-append because if you simply change visibility to hidden,
+				the element still takes up the same space on the page.
+			*/
+			function filterP(pos)
+			{
+				expandingList.innerHTML = '';	// Clear expanding list first before appending specific players.
+				
+				for (var i = 0; i < pList.length; i++)
+				{
+					// First check if draftable before re-appending.
+					if (draftableP(pList[i].position) && pList[i].isOwned == 'N/A')
+					{
+						// Append any draftable player.
+						if (pos === 'ALL')
+						{
+							appendPlayer(i);
+						}
+						else
+						{
+							// Append draftable player of a specific position.
+							if (pList[i].position === pos)
+							{
+								appendPlayer(i);
+							}
+						}
+					}
+				}
+				
+			}
+
+			/* Filter functions */
+			function filterALL() {filterP('ALL');}
+
+			function filterQB() {filterP('QB');}
+
+			function filterRB() {filterP('RB');}
+
+			function filterWR() {filterP('WR');}
+
+			function filterTE() {filterP('TE');}
+
+			function filterK() {filterP('K');}
+
+			function filterDEF() {filterP('DEF');}
+
+		</script>
+
+	</body>
+
+</html>

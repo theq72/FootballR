@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Players</title>
+	
+	<style>
+
+
+
+	h1 {background-color: #9D2D03;
+	}
+
+</style>
+</head>
+
+<body>
+
+	<div>
+		{{# if user }}
+		<h1>{{username}}'s Team</h1>
+		{{/if}}
+	</div>
+	
+	<div style="padding-left:16px">
+    <h2>Active Players:</h2>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>POS</th>
+				<th>Projected Points</th>
+        <th>Drop</th>
+        <th>Bench</th>
+			</tr>
+			{{# each actQB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+        		<td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+        		</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actRB}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each actWR}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each actTE}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each actK}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each actDEF}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-inAct/{{this.id}}" class="btn btn-success" role="button">Bench</a>
+            </td>
+      		</tr>
+      		{{/each}}
+    	</table>
+
+<br>
+<h2>Bench:</h2>
+
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>POS</th>
+				<th>PTS</th>
+        <th>Drop</th>
+        <th>Activate</th>
+			</tr>
+			{{# each resQB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+        		<td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+        		</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resRB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each resWR}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each resTE}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each resK}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+            </td>
+      		</tr>
+      		{{/each}}
+      		{{# each resDEF}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+        		<td><a href="/myTeam/drop-player/{{this.id}}" class="btn btn-danger" role="button"><i class="fas fa-minus"></i></a>
+            </td>
+            <td><a href="/myTeam/set-act/{{this.id}}/{{this.position}}" class="btn btn-success" role="button">Activate</a>
+            </td>
+      		</tr>
+      		{{/each}}
+    	</table>
+    </div>
+	</body>
+</html>

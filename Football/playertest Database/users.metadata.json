@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"playertest.users"},{"v":2,"key":{"username":1},"name":"username_1","ns":"playertest.users","background":true}],"uuid":"d0aaff18a2234b949418e11f7ba6b6e8"}

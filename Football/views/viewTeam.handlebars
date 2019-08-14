@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Players</title>
+	
+	<style>
+
+	h1 {background-color: #9D2D03;
+	}
+
+</style>
+</head>
+
+<body>
+
+	<div>
+		{{# if user }}
+		<h1>{{user.username}}'s Lineup</h1>
+		{{/if}}
+	</div>
+	
+	<div style="padding-left:16px">
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>POS</th>
+				<th>Projected Points</th>
+			</tr>
+			{{# each actQB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actRB}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actWR}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actTE}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actK}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each actDEF}}
+      		<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+    	</table>
+	</body>
+</html>
+
+
+	<div>
+    {{# if user }}
+    <h1>{{user.username}}'s Bench</h1>
+    {{/if}}
+	</div>
+
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>POS</th>
+				<th>Projected Points</th>
+			</tr>
+			{{# each resQB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resRB}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resWR}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resTE}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resK}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+      		{{# each resDEF}}
+			<tr>
+				<td> {{this.name}}</td>
+        		<td> {{this.position}}</td>
+        		<td> {{this.weekProjectedPts}}</td>
+      		</tr>
+      		{{/each}}
+    	</table>
+	</body>
+</html>
